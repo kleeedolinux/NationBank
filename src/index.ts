@@ -14,6 +14,7 @@ import loanRouter from './routes/loan';
 import adminRouter from './routes/admin';
 import { AuthRequest } from './types/AuthRequest';
 import expressLayouts from 'express-ejs-layouts';
+import AddonLoader from './utils/addonLoader';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 export const prisma = new PrismaClient();
 
-// Middleware setup
+// Setup middleware
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 app.set('view engine', 'ejs');
@@ -36,35 +37,27 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// Socket.IO Events
-io.on('connection', (socket) => {
-  console.log('Client connected');
-
-  socket.on('join-admin', () => {
-    socket.join('admin-room');
+// Initialize addons
+const addonLoader = AddonLoader.getInstance();
+addonLoader.loadAddons()
+  .then(() => {
+    // Load addon middleware and routes
+    const addons = addonLoader.getAddons();
+    for (const [_, addon] of addons) {
+      if (addon.middleware) {
+        addon.middleware.forEach(middleware => app.use(middleware));
+      }
+      if (addon.routes) {
+        app.use(`/addon/${addon.name}`, addon.routes);
+      }
+      if (addon.initialize) {
+        addon.initialize();
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Failed to load addons:', error);
   });
-
-  socket.on('join-user-room', (userId: string) => {
-    socket.join(`user-${userId}`);
-  });
-
-  socket.on('balance-update', (data) => {
-    io.to(`user-${data.userId}`).emit('balance-changed', data);
-  });
-
-  socket.on('transaction-created', (data) => {
-    io.to(`user-${data.senderId}`).emit('new-transaction', data);
-    io.to(`user-${data.receiverId}`).emit('new-transaction', data);
-  });
-
-  socket.on('gdp-update', (data) => {
-    io.to('admin-room').emit('gdp-changed', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-});
 
 // Route setup
 app.use('/', indexRouter);

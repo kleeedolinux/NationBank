@@ -11,8 +11,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:seed": "ts-node prisma/seed.ts",
-    "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed && npm run build",
-    "setup:init": "ts-node scripts/setup.ts"
+    "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed && npm run build"
   },
   "dependencies": {
     "@prisma/client": "^5.9.1",
