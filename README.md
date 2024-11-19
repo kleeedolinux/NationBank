@@ -2,6 +2,8 @@
 
 A full-featured banking system simulation with real-time updates, investments, and administrative controls.
 
+### v1.0 Beta (Unstable)
+
 ## Features
 
 ### User Features
