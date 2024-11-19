@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  publicId      String    @unique @default(uuid())
+  email         String    @unique
+  password      String
+  name          String
+  isAdmin       Boolean   @default(false)
+  isApproved    Boolean   @default(false)
+  balance       Float     @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  sentTransactions     Transaction[] @relation("sender")
+  receivedTransactions Transaction[] @relation("receiver")
+  loans               Loan[]
+  investments         Investment[]
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  amount      Float
+  senderId    String
+  receiverId  String
+  type        String   // TRANSFER, DEPOSIT, WITHDRAWAL, TAX
+  description String?
+  createdAt   DateTime @default(now())
+  
+  sender      User     @relation("sender", fields: [senderId], references: [id])
+  receiver    User     @relation("receiver", fields: [receiverId], references: [id])
+}
+
+model Investment {
+  id             String   @id @default(uuid())
+  userId         String
+  amount         Float
+  rate           Float    // Interest rate
+  term           Int      // Duration in days
+  status         String   // ACTIVE, COMPLETED, CANCELLED
+  expectedReturn Float    // Expected return at maturity
+  createdAt      DateTime @default(now())
+  maturityDate   DateTime
+  
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model Loan {
+  id          String   @id @default(uuid())
+  userId      String
+  amount      Float
+  rate        Float
+  term        Int      // Duration in months
+  status      String   // PENDING, APPROVED, REJECTED, PAID
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model SystemConfig {
+  id            String   @id @default(uuid())
+  currencySymbol String  @default("$")
+  cdiRate       Float    @default(0)
+  incomeTaxRate Float    @default(0)
+  updatedAt     DateTime @updatedAt
+}

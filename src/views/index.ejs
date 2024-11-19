@@ -1,0 +1,33 @@
+<div class="max-w-4xl mx-auto text-center">
+  <h1 class="text-4xl font-bold mb-8">Welcome to Personal Bank</h1>
+  
+  <% if (!user) { %>
+    <div class="space-y-4">
+      <p class="text-xl">Experience modern banking with real-time updates and investments</p>
+      <div class="space-x-4">
+        <a href="/auth/login" class="inline-block bg-blue-600 text-white px-6 py-2 rounded">Login</a>
+        <a href="/auth/register" class="inline-block bg-green-600 text-white px-6 py-2 rounded">Register</a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold mb-2">Your Balance</h2>
+        <p class="text-2xl" id="user-balance"><%= systemConfig.currencySymbol %><%= user.balance.toFixed(2) %></p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold mb-2">Your Public ID</h2>
+        <p class="text-sm break-all"><%= user.publicId %></p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold mb-2">Quick Actions</h2>
+        <div class="space-y-2">
+          <a href="/dashboard" class="block bg-blue-600 text-white px-4 py-2 rounded">Dashboard</a>
+          <a href="/transaction/history" class="block bg-green-600 text-white px-4 py-2 rounded">Transaction History</a>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div> 

@@ -1,0 +1,108 @@
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-2xl font-bold mb-4">System Configuration</h2>
+        <form action="/admin/update-config" method="POST">
+            <div class="mb-4">
+                <label>Currency Symbol</label>
+                <input type="text" name="currencySymbol" value="<%= systemConfig.currencySymbol %>" class="w-full border p-2">
+            </div>
+            <div class="mb-4">
+                <label>CDI Rate (%)</label>
+                <input type="number" name="cdiRate" step="0.01" value="<%= systemConfig.cdiRate %>" class="w-full border p-2">
+            </div>
+            <div class="mb-4">
+                <label>Income Tax Rate (%)</label>
+                <input type="number" name="incomeTaxRate" step="0.01" value="<%= systemConfig.incomeTaxRate %>" class="w-full border p-2">
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+                Update Configuration
+            </button>
+        </form>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-2xl font-bold mb-4">Economic Indicators</h2>
+        <div class="space-y-4">
+            <div>
+                <label class="font-bold">Total GDP:</label>
+                <span><%= systemConfig.currencySymbol %><%= gdp.toFixed(2) %></span>
+            </div>
+            <div>
+                <label class="font-bold">Inflation Rate:</label>
+                <span><%= calculateInflation() %>%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-8">
+    <h2 class="text-2xl font-bold mb-4">Pending Approvals</h2>
+    <div class="bg-white rounded-lg shadow">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="p-4">Name</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">Registration Date</th>
+                    <th class="p-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pendingUsers.forEach(user => { %>
+                    <tr class="border-t">
+                        <td class="p-4"><%= user.name %></td>
+                        <td class="p-4"><%= user.email %></td>
+                        <td class="p-4"><%= user.createdAt.toLocaleDateString() %></td>
+                        <td class="p-4">
+                            <form action="/admin/approve-user/<%= user.id %>" method="POST" class="inline">
+                                <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded">
+                                    Approve
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-8">
+  <h2 class="text-2xl font-bold mb-4">Pending Loans</h2>
+  <div class="bg-white rounded-lg shadow">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="p-4">User</th>
+          <th class="p-4">Amount</th>
+          <th class="p-4">Term (months)</th>
+          <th class="p-4">Rate</th>
+          <th class="p-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="pending-loans">
+        <% pendingLoans.forEach(loan => { %>
+          <tr class="border-t">
+            <td class="p-4"><%= loan.user.name %></td>
+            <td class="p-4"><%= systemConfig.currencySymbol %><%= loan.amount.toFixed(2) %></td>
+            <td class="p-4"><%= loan.term %></td>
+            <td class="p-4"><%= loan.rate.toFixed(2) %>%</td>
+            <td class="p-4">
+              <form action="/loan/approve/<%= loan.id %>" method="POST" class="inline">
+                <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded">
+                  Approve
+                </button>
+              </form>
+              <form action="/loan/reject/<%= loan.id %>" method="POST" class="inline">
+                <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded ml-2">
+                  Reject
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div> 

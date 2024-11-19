@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personal Bank</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-xl font-bold">Personal Bank</a>
+            <% if (typeof user !== 'undefined' && user) { %>
+                <div class="flex items-center space-x-4">
+                    <span>Balance: <%= systemConfig.currencySymbol %><%= user.balance.toFixed(2) %></span>
+                    <a href="/dashboard">Dashboard</a>
+                    <% if (user.isAdmin) { %>
+                        <a href="/admin/dashboard">Admin</a>
+                    <% } %>
+                    <a href="/auth/logout">Logout</a>
+                </div>
+            <% } %>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto mt-8 px-4">
+        <%- body %>
+    </main>
+    
+    <script src="/socket.io/socket.io.js"></script>
+</body>
+</html> 
