@@ -2,6 +2,8 @@
 
 A full-featured banking system simulation with real-time updates, investments, and administrative controls.
 
+### v1.0 Beta (Unstable)
+
 ## Features
 
 ### User Features
@@ -35,5 +37,5 @@ A full-featured banking system simulation with real-time updates, investments, a
 - SQLite (default) or PostgreSQL database
 
 ## Quick Start
+![Sem título](https://github.com/user-attachments/assets/1424e90c-c85d-464e-a07b-e132b9ec4048)
 
-1. Clone the repository:
