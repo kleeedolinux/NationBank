@@ -18,7 +18,6 @@ model User {
   balance       Float     @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
   sentTransactions     Transaction[] @relation("sender")
   receivedTransactions Transaction[] @relation("receiver")
   loans               Loan[]
@@ -30,10 +29,9 @@ model Transaction {
   amount      Float
   senderId    String
   receiverId  String
-  type        String   // TRANSFER, DEPOSIT, WITHDRAWAL, TAX
+  type        String
   description String?
   createdAt   DateTime @default(now())
-  
   sender      User     @relation("sender", fields: [senderId], references: [id])
   receiver    User     @relation("receiver", fields: [receiverId], references: [id])
 }
@@ -42,13 +40,12 @@ model Investment {
   id             String   @id @default(uuid())
   userId         String
   amount         Float
-  rate           Float    // Interest rate
-  term           Int      // Duration in days
-  status         String   // ACTIVE, COMPLETED, CANCELLED
-  expectedReturn Float    // Expected return at maturity
+  rate           Float
+  term           Int
+  status         String
+  expectedReturn Float
   createdAt      DateTime @default(now())
   maturityDate   DateTime
-  
   user           User     @relation(fields: [userId], references: [id])
 }
 
@@ -57,10 +54,9 @@ model Loan {
   userId      String
   amount      Float
   rate        Float
-  term        Int      // Duration in months
-  status      String   // PENDING, APPROVED, REJECTED, PAID
+  term        Int
+  status      String
   createdAt   DateTime @default(now())
-  
   user        User     @relation(fields: [userId], references: [id])
 }
 
