@@ -1,19 +1,22 @@
-
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-2xl font-bold mb-4">System Configuration</h2>
         <form action="/admin/update-config" method="POST">
             <div class="mb-4">
+                <label>Bank Name</label>
+                <input type="text" name="bankName" value="<%= bankConfig?.bankName || 'NationBank' %>" class="w-full border p-2">
+            </div>
+            <div class="mb-4">
                 <label>Currency Symbol</label>
-                <input type="text" name="currencySymbol" value="<%= systemConfig.currencySymbol %>" class="w-full border p-2">
+                <input type="text" name="currencySymbol" value="<%= systemConfig?.currencySymbol || '$' %>" class="w-full border p-2">
             </div>
             <div class="mb-4">
                 <label>CDI Rate (%)</label>
-                <input type="number" name="cdiRate" step="0.01" value="<%= systemConfig.cdiRate %>" class="w-full border p-2">
+                <input type="number" name="cdiRate" step="0.01" value="<%= systemConfig?.cdiRate || 0 %>" class="w-full border p-2">
             </div>
             <div class="mb-4">
                 <label>Income Tax Rate (%)</label>
-                <input type="number" name="incomeTaxRate" step="0.01" value="<%= systemConfig.incomeTaxRate %>" class="w-full border p-2">
+                <input type="number" name="incomeTaxRate" step="0.01" value="<%= systemConfig?.incomeTaxRate || 0 %>" class="w-full border p-2">
             </div>
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
                 Update Configuration

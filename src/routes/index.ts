@@ -3,16 +3,21 @@ import { prisma } from '../index';
 import { isAuthenticated, isAdmin } from '../middleware/auth';
 import { AuthRequest } from '../types/AuthRequest';
 import { calculateInflation } from '../utils/calculations';
+import { getBankConfig } from '../utils/bankConfig';
 
 const router = express.Router();
 
 // Public routes
 router.get('/', async (req: AuthRequest, res) => {
   try {
-    const systemConfig = await prisma.systemConfig.findFirst();
+    const [systemConfig, bankConfig] = await Promise.all([
+      prisma.systemConfig.findFirst(),
+      getBankConfig()
+    ]);
     res.render('index', { 
       user: req.user, 
       systemConfig,
+      bankConfig,
       error: req.query.error,
       message: req.query.message
     });
@@ -20,6 +25,7 @@ router.get('/', async (req: AuthRequest, res) => {
     res.render('index', { 
       user: null, 
       systemConfig: { currencySymbol: '$' },
+      bankConfig: { bankName: 'Personal Bank' },
       error: 'System error'
     });
   }
@@ -83,11 +89,10 @@ router.get('/transaction/history', isAuthenticated, async (req: AuthRequest, res
 // Admin dashboard
 router.get('/admin/dashboard', isAuthenticated, isAdmin, async (req: AuthRequest, res) => {
   try {
-    // Get current and previous GDP data (using a 30-day window)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const [pendingUsers, pendingLoans, systemConfig, currentGDP, previousGDP] = await Promise.all([
+    const [pendingUsers, pendingLoans, systemConfig, currentGDP, previousGDP, bankConfig] = await Promise.all([
       prisma.user.findMany({
         where: { isApproved: false }
       }),
@@ -108,13 +113,12 @@ router.get('/admin/dashboard', isAuthenticated, isAdmin, async (req: AuthRequest
         _sum: {
           amount: true
         }
-      })
+      }),
+      getBankConfig()
     ]);
 
     const gdp = currentGDP._sum.balance || 0;
-    const previousGDPValue = previousGDP._sum.amount || gdp; // Use current GDP if no previous data
-    
-    // Calculate inflation using the utility function
+    const previousGDPValue = previousGDP._sum.amount || gdp;
     const inflationRate = calculateInflation(previousGDPValue, gdp);
 
     res.render('admin/dashboard', {
@@ -125,7 +129,8 @@ router.get('/admin/dashboard', isAuthenticated, isAdmin, async (req: AuthRequest
       gdp,
       calculateInflation: () => inflationRate,
       error: req.query.error,
-      message: req.query.message
+      message: req.query.message,
+      bankConfig
     });
   } catch (error) {
     res.redirect('/dashboard?error=Failed to load admin dashboard');
