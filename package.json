@@ -14,7 +14,7 @@
     "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed && npm run build"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.1",
+    "@prisma/client": "^6.0.0",
     "@types/express-ejs-layouts": "^2.5.4",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.1",
