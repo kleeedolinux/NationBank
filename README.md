@@ -54,8 +54,8 @@ A full-featured banking system simulation with real-time updates, investments, a
 2. Execute the file with Terminal (you may need to run some commands listed under "Using Terminal 💻") and follow the given instructions.
 
 #### Using Terminal 💻
-1. Run the following command: ```wget https://raw.githubusercontent.com/kleeegolinux/NationBank/main/setup.sh```.
-(Or use curl: ```curl -O https://raw.githubusercontent.com/kleeegolinux/NationBank/main/setup.sh```.)
+1. Run the following command: ```wget https://raw.githubusercontent.com/kleeedolinux/NationBank/main/setup.sh```.
+(Or use curl: ```curl -O https://raw.githubusercontent.com/kleeedolinux/NationBank/main/setup.sh```.)
 2. Make the setup file executable: ```chmod +x setup.sh```.
 3. Then run it: ```./setup.sh``` and follow the given instructions.
 
