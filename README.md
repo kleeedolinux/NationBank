@@ -44,13 +44,13 @@ A full-featured banking system simulation with real-time updates, investments, a
 ### Windows 🪟
 
 #### On the web 🌐
-1. Download the [setup.bat](https://github.com/kleeegolinux/NationBank/blob/main/setup.bat) file.
+1. Download the [setup.bat](https://github.com/kleeedolinux/NationBank/blob/main/setup.bat) file.
 2. Execute the file with Command Prompt (or PowerShell) and follow the given instructions.
 
 ### Linux-based Systems 🐧
 
 #### On the web 🌐
-1. Download the [setup.sh](https://github.com/kleeegolinux/NationBank/blob/main/setup.sh) file.
+1. Download the [setup.sh](https://github.com/kleeedolinux/NationBank/blob/main/setup.sh) file.
 2. Execute the file with Terminal (you may need to run some commands listed under "Using Terminal 💻") and follow the given instructions.
 
 #### Using Terminal 💻
